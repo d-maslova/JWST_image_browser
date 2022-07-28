@@ -1,0 +1,95 @@
+#introduction {
+    height: 220px;
+    color: #C06014;
+    background-color: #B4A5A5;
+    text-align: right;
+}
+
+a {
+
+}
+
+h1 {
+    padding: 60px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem;
+    line-height: 2;
+    font-weight: 500;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 450px;
+    height: 260px;
+}
+.desc {
+    size: 2pt;
+    text-align: fit left;
+    padding: 10px;
+    color: #ECDBBA;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+div.gallery{
+    margin: 5px;
+    float: left;
+    width: 250px;
+
+}
+
+.gallery-img:hover{
+    border: 1px solid #C06014;
+}
+
+div.gallery img{
+    width: 100%;
+    height: auto;
+}
+
+.gallery-container {
+    padding: 25px 10px;
+    background-color: #161616;
+    line-height:0;
+   -webkit-column-count:5; /* split it into 5 columns */
+   -webkit-column-gap:5px; /* give it a 5px gap between columns */
+   -moz-column-count:5;
+   -moz-column-gap:5px;
+   column-count:5;
+   column-gap:5px;
+}
+
+.gallery-nav {
+    position: absolute;
+    width: 100%;
+    background-color: #B4A5A5;
+    height: 125px;
+    color: #C06014;
+    text-align: center;
+}
+
+.nav-btn {
+    position: relative;
+    top: 38%;
+    right: 1%;
+    padding-left: 25px;
+    padding-right: 25px;
+    color: #C06014;
+    font-size: 25px;
+
+
+}
+
+.add-icon {
+    z-index: 1;
+    position: absolute;
+    padding: 10px;
+    color: #C06014;
+    size: 50%;
+    opacity: 0.75;
+    margin-top: 10px;
+}
+
+.add-icon:hover {
+    color: #ff4c68;
+}

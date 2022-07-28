@@ -1,0 +1,25 @@
+{% include 'header.html'%}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <div class="gallery-container">
+    {% for img in images[:pg_len]: %}
+        <div class="gallery">
+            <a target="_blank" href="{{ img.img_url }}">
+
+            <img class="gallery-img" src="{{img.img_url}}"  alt="{{img.id}}" >
+            </a>
+        <div class="desc">{{img.id}}</div>
+        </div>
+    {% endfor %}
+ </div>
+ <div class="gallery-nav" style="background-image: url('https://images.unsplash.com/photo-1558158539-226f4a45f7b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80')">
+    <a class="button nav-btn" href="{{url_for('prev_gallery', img_id=images[pg_len].id)}}"><-- Back</a>
+    <a class="nav-btn" href="{{url_for('next_gallery', img_id=images[pg_len].id)}}">Next --></a>
+</div>
+</body>
+</html>
