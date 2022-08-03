@@ -1,0 +1,16 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register to create a gallery</title>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-div">
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        </div>
+    </div>
+</body>
+</html>

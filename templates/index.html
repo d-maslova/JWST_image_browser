@@ -10,8 +10,8 @@
     {% for img in images[:pg_len]: %}
         <div class="gallery">
             <a target="_blank" href="{{ img.img_url }}">
-                <a class="btn" href="{{url_for('add_to_gallery')}}">
-                    <i class="fa-solid fa-square-plus fa-lg add-icon" >Add</i></a>
+                <a class="btn" href="#">
+                    <i class="fa-solid fa-square-plus fa-md add-icon" > add</i></a>
             <img src="{{img.img_url}}"  alt="{{img.id}}" >
             </a>
         <div class="desc"> {{img.id}}</div>

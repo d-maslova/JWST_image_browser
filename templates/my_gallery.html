@@ -1,17 +1,17 @@
-{% include 'header.html'%}
-
+{%include 'header.html'%}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<body>
  <div class="gallery-container">
-    {% for img in images[:pg_len]: %}
+    {% for img in images: %}
         <div class="gallery">
             <a target="_blank" href="{{ img.img_url }}">
                 <a class="btn" href="{{url_for('add', user_id=current_user.id, img_id=img.id)}}">
-                    <i class="fa-solid fa-square-plus fa-md add-icon" > add</i></a>
+                    <i class="fa-solid fa-trash fa-md"> delete</i></a>
                 <img class="gallery-img" src="{{img.img_url}}"  alt="{{img.id}}" >
             </a>
         <div class="desc">{{img.id}}</div>
@@ -22,5 +22,6 @@
     <a class="button nav-btn" href="{{url_for('prev_gallery', img_id=images[pg_len].id)}}"><-- Back</a>
     <a class="nav-btn" href="{{url_for('next_gallery', img_id=images[pg_len].id)}}">Next --></a>
 </div>
+</body>
 </body>
 </html>

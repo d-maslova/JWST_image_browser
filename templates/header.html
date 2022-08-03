@@ -11,8 +11,45 @@
     <title>JWST Image Browser</title>
 </head>
 <body>
+
+ <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{url_for('home')}}">JWST.IB</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    {% if not current_user.is_authenticated :%}
+                    <li class="navbar-nav ml-auto">
+                        <a class="nav-link" href="{{url_for('login')}}">Log In</a>
+                    </li>
+                    <li class="navbar-nav ml-auto">
+                        <a class="nav-link" href="{{url_for('register')}}">Register</a>
+                    </li>
+                    <li class="navbar-nav ml-auto">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    {% else: %}
+                    <li class="navbar-nav ml-auto">
+                        <a class="nav-link" href="{{url_for('my_gallery', user_id = current_user.id)}}">View my gallery</a>
+                    </li>
+                    <li class="navbar-nav ml-auto">
+                        <a class="nav-link" href="{{url_for('log_out')}}">Logout</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-fluid" id="introduction" style="background-image: url('https://images.unsplash.com/photo-1558158539-226f4a45f7b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80')">
         <h1>jwst Image browser</h1>
+        <h5 class="user-greeting">
+            {% if current_user.is_authenticated %}
+                Hi {{ current_user.name }}!
+            {% endif %}
+        </h5>
     </div>
 </body>
 </html>
