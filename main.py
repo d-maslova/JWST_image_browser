@@ -34,6 +34,7 @@ class Images(db.Model):
     observation_id = db.Column(db.String(250), nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
     suffix = db.Column(db.String(250), nullable=False)
+    child = relationship("GalleryImage", back_populates="parent")
 
 
 class User(db.Model, UserMixin):
@@ -49,9 +50,10 @@ class GalleryImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     img_id = db.Column(db.Integer, ForeignKey("images.id"))
     user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    parent = relationship("Images", back_populates="child")
 
 
-# db.create_all()
+db.create_all()
 # User.__table__.create(db.session.bind)
 
 
@@ -168,15 +170,13 @@ def add(user_id, img_id):
 @app.route('/my_gallery/<int:user_id>', methods=["GET", "POST"])
 @login_required
 def my_gallery(user_id):
-    query = db.session.query(GalleryImage).filter_by(user_id=user_id).all()
-    all_images = db.session.query(Images).filter_by(id=query).all()
-    print(all_images)
+    query = GalleryImage.query.filter(GalleryImage.user_id==user_id).all()
 
     # print(all_images)
     # all_images = Images.query.filter_by(email=form.email.data).first()
     # print(all_images)
 
-    return render_template("my_gallery.html", images=all_images, pg_len=len(all_images))
+    return render_template("my_gallery.html", query=query, pg_len=len(query)-1)
 
 
 if __name__ == "__main__":
