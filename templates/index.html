@@ -2,16 +2,19 @@
 
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>James Webb Telescope Image Browser</title>
+    <meta charset="UTF-8" name="viewport" content="width=device_width, initial-scale=1">
+    <meta >
+
 </head>
 <body>
  <div class="gallery-container">
     {% for img in images[:pg_len]: %}
         <div class="gallery">
             <a target="_blank" href="{{ img.img_url }}">
-                <a class="btn" href="#">
+                {%if current_user.is_authenticated:%}
+                <a class="btn" href="">
                     <i class="fa-solid fa-square-plus fa-md add-icon" > add</i></a>
+                {%endif%}
             <img src="{{img.img_url}}"  alt="{{img.id}}" >
             </a>
         <div class="desc"> {{img.id}}</div>

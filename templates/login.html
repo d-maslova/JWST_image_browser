@@ -9,16 +9,16 @@
 <body>
     <div class="form-container">
         <div class="form-div">
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class=flashes>
             {% for message in messages %}
-                <p>{{ message }}</p>
+                <li>{{ message }}</li>
             {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
-        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         </div>
     </div>
 </body>

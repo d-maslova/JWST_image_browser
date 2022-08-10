@@ -1,21 +1,27 @@
 #introduction {
-    height: 220px;
+    position: relative;
+    height: 285px;
     color: #C06014;
     background-color: #B4A5A5;
     text-align: right;
 }
 
+.user-greeting {
+    position: relative;
+    text-align: right;
+    padding-right: 60px;
+    color: #ECDBBA;
+    font-size: 1.2vw;
+}
+
 h1 {
-    padding: 60px;
+    padding: 90px 60px 10px 60px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 3.5rem;
+    font-size: 3.5vw;
     line-height: 2;
     font-weight: 500;
 }
 
-.user-greeting {
-    color: #C06014;
-}
 .navbar{
     z-index: 1;
     background-color: #ECDBBA;
@@ -24,6 +30,10 @@ h1 {
 
 .navbar-brand {
     color: #C06014;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 #mainNav .navbar-nav > li.navbar-nav > a {
@@ -41,7 +51,7 @@ img {
     size: 2pt;
     text-align: fit left;
     padding: 10px;
-    color: #ECDBBA;
+    color: #C06014;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 div.gallery{
@@ -58,11 +68,14 @@ div.gallery{
 div.gallery img{
     width: 100%;
     height: auto;
+    padding-left: 10px;
 }
 
 .gallery-container {
-    padding: 25px 10px;
-    background-color: #161616;
+    padding: 25px;
+    background-color: #ECDBBA;
+    border: 25px;
+
     line-height:0;
    -webkit-column-count:5; /* split it into 5 columns */
    -webkit-column-gap:5px; /* give it a 5px gap between columns */
@@ -94,7 +107,7 @@ div.gallery img{
 }
 
 .fa-solid{
-    z-index: 1;
+    z-index: 0;
     position: absolute;
     padding: 5px;
     color: #ECDBBA;
@@ -134,3 +147,8 @@ div.gallery img{
     color: #C06014;
 
 }
+
+.this-image {
+    z-index: 2;
+}
+

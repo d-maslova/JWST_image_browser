@@ -1,4 +1,6 @@
 import os
+
+import flask
 from flask import Flask, render_template, request, redirect, flash, abort, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import StringField, SubmitField, PasswordField, validators
@@ -26,7 +28,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+LOGIN_URL = '/login'
 
 class Images(db.Model):
     __tablename__ = "images"
@@ -56,7 +58,6 @@ class GalleryImage(db.Model):
 db.create_all()
 # User.__table__.create(db.session.bind)
 
-
 imgs_per_page = 25
 
 configure()
@@ -75,6 +76,7 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired()])
     submit = SubmitField("Log in")
+
 
 
 @login_manager.user_loader
@@ -112,24 +114,6 @@ def register():
     return render_template("register.html", form=form)
 
 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            user = User.query.filter_by(email=form.email.data).first()
-            password = form.password.data
-            if not user:
-                flash("That email does not exist. Please try again.")
-            elif not check_password_hash(pwhash=user.password, password=password):
-                flash("The password is incorrect. Please try again or register an account")
-                return redirect(url_for("login"))
-            else:
-                login_user(user)
-                return redirect(url_for("home"))
-    return render_template("login.html", form=form)
-
-
 @app.route('/logout')
 def log_out():
     logout_user()
@@ -146,9 +130,29 @@ def next_gallery(img_id):
 @app.route('/gallery/back/<int:img_id>')
 def prev_gallery(img_id):
     all_images = Images.query.all()
-    img_id -= (imgs_per_page*2+1) #25 images per page... - 25-25+1
-    print(f"back: {img_id}")
+    img_id -= (imgs_per_page*2)  # 25 images per page... - 25-25
     return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user = User.query.filter_by(email=form.email.data).first()
+            password = form.password.data
+            if not user:
+                flash("That email does not exist. Please try again.")
+            elif not check_password_hash(pwhash=user.password, password=password):
+                flash("The password is incorrect. Please try again or register an account.")
+                return redirect(url_for("login"))
+            else:
+                login_user(user)
+                # If the user registers,
+                # the below code should return the user to the page they were at,
+                # before registering...
+                return redirect(url_for("home"))
+    return render_template("login.html", form=form)
 
 
 @app.route('/add/<int:user_id>/<int:img_id>', methods=["GET", "POST"])
@@ -156,26 +160,29 @@ def prev_gallery(img_id):
 def add(user_id, img_id):
     user_id = user_id
     img_id = img_id
+    if img_id == GalleryImage.query.filter_by(img_id=img_id).first():
+        flash("image already in your gallery")
+    else:
+        new_img = GalleryImage(
+            user_id=user_id,
+            img_id=img_id
+        )
+        db.session.add(new_img)
+        db.session.commit()
+        all_images = Images.query.all()
+        return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
 
-    new_img = GalleryImage(
-        user_id=user_id,
-        img_id=img_id
-    )
-    db.session.add(new_img)
-    db.session.commit()
-    all_images = Images.query.all()
-    return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
+
+@app.route('/delete/<int:user_id>/<int:img_id>', methods=["GET", "POST"])
+@login_required
+def delete(user_id, img_id):
+    pass
 
 
 @app.route('/my_gallery/<int:user_id>', methods=["GET", "POST"])
 @login_required
 def my_gallery(user_id):
     query = GalleryImage.query.filter(GalleryImage.user_id==user_id).all()
-
-    # print(all_images)
-    # all_images = Images.query.filter_by(email=form.email.data).first()
-    # print(all_images)
-
     return render_template("my_gallery.html", query=query, pg_len=len(query)-1)
 
 
