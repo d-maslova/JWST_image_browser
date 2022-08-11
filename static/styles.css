@@ -1,23 +1,32 @@
 #introduction {
     position: relative;
-    height: 285px;
+    height: 20vw;
+    min-height: 175px;
     color: #C06014;
     background-color: #B4A5A5;
     text-align: right;
+    font-family: 'Sarabun', sans-serif;
 }
+
+#mainNav {
+    padding-right: 20px;
+    border-radius: 0 0 10px 10px;
+}
+
 
 .user-greeting {
     position: relative;
     text-align: right;
-    padding-right: 60px;
+    padding-right: 5vw;
     color: #ECDBBA;
-    font-size: 1.2vw;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.5vw;
 }
 
 h1 {
-    padding: 90px 60px 10px 60px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 3.5vw;
+    padding: 90px 5vw 10px 60px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 3.7vw;
     line-height: 2;
     font-weight: 500;
 }
@@ -28,24 +37,30 @@ h1 {
     color: #C06014;
 }
 
+.nav-link {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.2vw;
+}
+
 .navbar-brand {
     color: #C06014;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 25px 25px 20px;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 500;
 }
 
 #mainNav .navbar-nav > li.navbar-nav > a {
     color: #C06014;
 }
 
+
 img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 450px;
+    width: fit-content;
     height: 260px;
+    border-radius: 10px;
 }
 .desc {
     size: 2pt;
@@ -54,21 +69,21 @@ img {
     color: #C06014;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-div.gallery{
+
+.gallery{
     margin: 5px;
     float: left;
-    width: 250px;
-
 }
 
 .gallery-img:hover{
-    border: 1px solid #C06014;
+    border: 3px solid #C06014;
 }
 
 div.gallery img{
+    position: relative;
     width: 100%;
     height: auto;
-    padding-left: 10px;
+    border-radius: 11px;
 }
 
 .gallery-container {
@@ -77,12 +92,12 @@ div.gallery img{
     border: 25px;
 
     line-height:0;
-   -webkit-column-count:5; /* split it into 5 columns */
-   -webkit-column-gap:5px; /* give it a 5px gap between columns */
-   -moz-column-count:5;
-   -moz-column-gap:5px;
-   column-count:5;
-   column-gap:5px;
+   -webkit-column-count:4; /* split it into 5 columns */
+   -webkit-column-gap:3px; /* give it a 5px gap between columns */
+   -moz-column-count:4;
+   -moz-column-gap:3px;
+   column-count:4;
+   column-gap:3px;
 }
 
 .gallery-nav {
@@ -101,13 +116,12 @@ div.gallery img{
     padding-left: 25px;
     padding-right: 25px;
     color: #C06014;
-    font-size: 25px;
-
-
+    font-family: 'Sarabun', sans-serif;
+    font-size: 2.5vw;
 }
 
 .fa-solid{
-    z-index: 0;
+    z-index: 3;
     position: absolute;
     padding: 5px;
     color: #ECDBBA;
@@ -118,7 +132,12 @@ div.gallery img{
 
 .add-icon:hover {
     color: #C06014;
-    opacity: 0.75;
+    opacity: 0.95;
+}
+
+.delete-icon:hover {
+    color: #C06014;
+    opacity: 0.95;
 }
 
 .form-container {
@@ -145,10 +164,6 @@ div.gallery img{
 .flashes p {
     size: 12px;
     color: #C06014;
-
 }
 
-.this-image {
-    z-index: 2;
-}
 

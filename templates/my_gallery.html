@@ -5,13 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<body>
  <div class="gallery-container">
     {% for q in query[:pg_len+1]: %}
         <div class="gallery">
             <a target="_blank" href="{{ q.parent.img_url }}">
                 <a class="btn" href="{{url_for('delete', user_id=current_user.id, img_id=q.parent.id)}}">
-                    <i class="fa-solid fa-trash fa-md"> delete</i></a>
+                    <i class="fa-solid fa-trash fa-md delete-icon"> delete</i></a>
                 <img class="gallery-img" src="{{q.parent.img_url}}"  alt="{{q.parent.id}}" >
             </a>
         <div class="desc">{{q.parent.id}}</div>
@@ -20,5 +19,5 @@
  </div>
 
 </body>
-</body>
+
 </html>

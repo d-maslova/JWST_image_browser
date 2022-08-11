@@ -1,17 +1,15 @@
 import os
-
-import flask
 from flask import Flask, render_template, request, redirect, flash, abort, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 from wtforms import StringField, SubmitField, PasswordField, validators
-from wtforms.validators import URL, InputRequired, Email
+from flask_wtf import FlaskForm
+from sqlalchemy import ForeignKey
 from flask_login import LoginManager, login_user, UserMixin, current_user, logout_user, login_required
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap
-from sqlalchemy import ForeignKey
-from flask_wtf import FlaskForm
-from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from wtforms.validators import URL, InputRequired, Email
 
 
 def configure():
@@ -58,7 +56,7 @@ class GalleryImage(db.Model):
 db.create_all()
 # User.__table__.create(db.session.bind)
 
-imgs_per_page = 25
+imgs_per_page = 20
 
 configure()
 
@@ -76,7 +74,6 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired()])
     submit = SubmitField("Log in")
-
 
 
 @login_manager.user_loader
@@ -158,25 +155,34 @@ def login():
 @app.route('/add/<int:user_id>/<int:img_id>', methods=["GET", "POST"])
 @login_required
 def add(user_id, img_id):
-    user_id = user_id
-    img_id = img_id
-    if img_id == GalleryImage.query.filter_by(img_id=img_id).first():
-        flash("image already in your gallery")
+    all_images = Images.query.all()
+    request_url = request.url
+    user = user_id
+    img = img_id
+    check_for_img = GalleryImage.query.filter_by(img_id=img, user_id=user).scalar()
+    if check_for_img:
+        pass
     else:
         new_img = GalleryImage(
-            user_id=user_id,
-            img_id=img_id
+            user_id=user,
+            img_id=img
         )
         db.session.add(new_img)
         db.session.commit()
         all_images = Images.query.all()
-        return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
+        # return render_template("gallery.html", images=all_images[img:], pg_len=imgs_per_page)
+    # return render_template("gallery.html", images=all_images[img:], pg_len=imgs_per_page)
+    return redirect(url_for(request_url))
 
 
 @app.route('/delete/<int:user_id>/<int:img_id>', methods=["GET", "POST"])
 @login_required
 def delete(user_id, img_id):
-    pass
+    user = user_id
+    img = img_id
+    GalleryImage.query.filter_by(img_id=img).delete()
+    db.session.commit()
+    return redirect(url_for("my_gallery", user_id=user))
 
 
 @app.route('/my_gallery/<int:user_id>', methods=["GET", "POST"])
