@@ -7,6 +7,9 @@
     <title>Register to create a gallery</title>
 </head>
 <body>
+    <div class="register-msg">
+        <h4>Register with your email address to create your own gallery</h4>
+    </div>
     <div class="form-container">
         <div class="form-div">
             {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}

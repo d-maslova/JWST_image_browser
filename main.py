@@ -1,15 +1,22 @@
 import os
-from flask import Flask, render_template, request, redirect, flash, abort, url_for
+
+from django.forms import models
+from flask import Flask, render_template, request, redirect, flash, abort, url_for, session
 from dotenv import load_dotenv
 from wtforms import StringField, SubmitField, PasswordField, validators
 from flask_wtf import FlaskForm
 from sqlalchemy import ForeignKey
 from flask_login import LoginManager, login_user, UserMixin, current_user, logout_user, login_required
+from flask_session import Session
 from sqlalchemy.orm import relationship
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.routing import Map, Rule, NotFound, RequestRedirect
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.validators import URL, InputRequired, Email
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+
 
 
 def configure():
@@ -27,6 +34,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 LOGIN_URL = '/login'
+
 
 class Images(db.Model):
     __tablename__ = "images"
@@ -53,10 +61,10 @@ class GalleryImage(db.Model):
     parent = relationship("Images", back_populates="child")
 
 
-db.create_all()
+# db.create_all()
 # User.__table__.create(db.session.bind)
 
-imgs_per_page = 20
+imgs_per_page = 24
 
 configure()
 
@@ -66,7 +74,6 @@ class RegisterForm(FlaskForm):
     name = StringField("Full Name", validators=[InputRequired()])
     email = StringField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired()])
-    confirm_pass = PasswordField("Confirm Password", validators=[InputRequired()])
     submit = SubmitField("Create my gallery")
 
 
@@ -81,10 +88,45 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-@app.route('/')
-def home():
+# def index(request):
+#     img_list = Images.objects.all()
+#     print(img_list)
+#     paginator = Paginator(img_list, imgs_per_page)
+#
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#
+#     return render(request, 'index.html', {'page_obj': page_obj})
+
+
+@app.route('/', methods=['GET', 'POST'], defaults={"page": 1})
+@app.route('/<int:page>', methods=['GET'])
+def home(page):
+    page = request.args.get("page")
+    img_list = db.session.query(Images)
+    paginator = Paginator(img_list, imgs_per_page)
+
+    try:
+        all_images = paginator.page(page)
+    except PageNotAnInteger:
+        all_images = paginator.page(1)
+    except EmptyPage:
+        all_images = paginator.page(paginator.num_pages)
+
+    # all_images = paginator.page(2)
+    # print(f"strt-index: {all_images.start_index()}\nend-index: {all_images.end_index()}")
+    # print(f"Total: {paginator.count}")
+    # print(f"Num pages: {paginator.num_pages}")
+    # print(f"Page range: {paginator.page_range}")
+    # print(f"Page 7: {paginator.page(7)}")
+    return render_template("index.html", images=all_images)
+
+
+@app.route('/gallery/forward/<int:img_id>')
+def next_gallery(img_id):
     all_images = Images.query.all()
-    return render_template("index.html", images=all_images, pg_len=imgs_per_page)
+    session['url'] = url_for('next_gallery', img_id=img_id)
+    return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -103,32 +145,11 @@ def register():
             email=form.email.data,
             password=hashed_salted_pass
         )
-
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
         return redirect(url_for("home"))
     return render_template("register.html", form=form)
-
-
-@app.route('/logout')
-def log_out():
-    logout_user()
-    return redirect(url_for("home"))
-
-
-@app.route('/gallery/forward/<int:img_id>')
-def next_gallery(img_id):
-    all_images = Images.query.all()
-    return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
-
-
-# # Gets the last upload image.id, subtracts the last uploaded + images per page to go 'back'
-@app.route('/gallery/back/<int:img_id>')
-def prev_gallery(img_id):
-    all_images = Images.query.all()
-    img_id -= (imgs_per_page*2)  # 25 images per page... - 25-25
-    return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -148,15 +169,30 @@ def login():
                 # If the user registers,
                 # the below code should return the user to the page they were at,
                 # before registering...
-                return redirect(url_for("home"))
+                try:
+                    return redirect(url_for(session['url']))
+                except KeyError:
+                    return redirect(url_for("home"))
     return render_template("login.html", form=form)
+
+
+@app.route('/logout')
+def log_out():
+    logout_user()
+    return redirect(url_for("home"))
+
+
+# # Gets the last upload image.id, subtracts the last uploaded + images per page to go 'back'
+@app.route('/gallery/back/<int:img_id>')
+def prev_gallery(img_id):
+    all_images = Images.query.all()
+    img_id -= (imgs_per_page*2)  # 25 images per page... - 25-25
+    return render_template("gallery.html", images=all_images[img_id:], pg_len=imgs_per_page)
 
 
 @app.route('/add/<int:user_id>/<int:img_id>', methods=["GET", "POST"])
 @login_required
 def add(user_id, img_id):
-    all_images = Images.query.all()
-    request_url = request.url
     user = user_id
     img = img_id
     check_for_img = GalleryImage.query.filter_by(img_id=img, user_id=user).scalar()
@@ -169,10 +205,7 @@ def add(user_id, img_id):
         )
         db.session.add(new_img)
         db.session.commit()
-        all_images = Images.query.all()
-        # return render_template("gallery.html", images=all_images[img:], pg_len=imgs_per_page)
-    # return render_template("gallery.html", images=all_images[img:], pg_len=imgs_per_page)
-    return redirect(url_for(request_url))
+    return redirect(session['url'])
 
 
 @app.route('/delete/<int:user_id>/<int:img_id>', methods=["GET", "POST"])

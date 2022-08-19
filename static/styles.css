@@ -1,155 +1,181 @@
-#introduction {
-    position: relative;
-    height: 20vw;
-    min-height: 175px;
-    color: #C06014;
-    background-color: #B4A5A5;
-    text-align: right;
-    font-family: 'Sarabun', sans-serif;
+:root {
+--heavydark: #483434;
+--lightdark: #6B4F4F;
+--heavylight: #EED6C4;
+--light: #FFF3E4;
 }
 
 #mainNav {
     padding-right: 20px;
+    padding-top: 5px;
     border-radius: 0 0 10px 10px;
+    z-index: 1;
+    background-color: var(--lightdark);
+    opacity: 0.95;
+    height: 12vh;
 }
 
+
+.nav-link {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.2vw;
+    color: var(--light);
+    padding-right: 25px;
+}
+
+.navbar-brand {
+    color: var(--light);
+    padding: 20px 25px 25px 25px;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 500;
+}
+
+#introduction {
+    position: relative;
+    padding: 0px;
+    height: 20vh;
+    min-height: 175px;
+    color: var(--light);
+    background-color: var(--heavylight);
+    font-family: 'Sarabun', sans-serif;
+}
 
 .user-greeting {
     position: relative;
     text-align: right;
     padding-right: 5vw;
-    color: #ECDBBA;
+    color: var(--light);
     font-family: 'Sarabun', sans-serif;
     font-size: 1.5vw;
 }
 
-h1 {
-    padding: 90px 5vw 10px 60px;
+#introduction h1 {
+    padding: 70px 5vw 10px 30px;
     font-family: 'Sarabun', sans-serif;
     font-size: 3.7vw;
     line-height: 2;
     font-weight: 500;
-}
-
-.navbar{
-    z-index: 1;
-    background-color: #ECDBBA;
-    color: #C06014;
-}
-
-.nav-link {
-    font-family: 'Sarabun', sans-serif;
-    font-size: 1.2vw;
-}
-
-.navbar-brand {
-    color: #C06014;
-    padding: 20px 25px 25px 20px;
-    font-family: 'Sarabun', sans-serif;
-    font-weight: 500;
-}
-
-#mainNav .navbar-nav > li.navbar-nav > a {
-    color: #C06014;
-}
-
-
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-    height: 260px;
-    border-radius: 10px;
-}
-.desc {
-    size: 2pt;
-    text-align: fit left;
-    padding: 10px;
-    color: #C06014;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.gallery{
-    margin: 5px;
-    float: left;
-}
-
-.gallery-img:hover{
-    border: 3px solid #C06014;
-}
-
-div.gallery img{
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-radius: 11px;
+    color: var(--heavylight);
+    text-align: left;
+    background-image: url("https://www.nasa.gov/sites/default/files/thumbnails/image/main_image_star-forming_region_carina_nircam_final-5mb.jpg");
+    background-position: 5%;
 }
 
 .gallery-container {
-    padding: 25px;
-    background-color: #ECDBBA;
-    border: 25px;
-
-    line-height:0;
-   -webkit-column-count:4; /* split it into 5 columns */
-   -webkit-column-gap:3px; /* give it a 5px gap between columns */
-   -moz-column-count:4;
-   -moz-column-gap:3px;
-   column-count:4;
-   column-gap:3px;
-}
-
-.gallery-nav {
-    position: absolute;
-    width: 100%;
-    background-color: #B4A5A5;
-    height: 125px;
-    color: #C06014;
-    text-align: center;
-}
-
-.nav-btn {
     position: relative;
-    top: 38%;
-    right: 1%;
-    padding-left: 25px;
-    padding-right: 25px;
-    color: #C06014;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 2.5vw;
+    padding: 25px;
+    background-color: var(--heavylight);
+    border: 25px;
+    display: flex;
+    display: -ms-flexbox;
+    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+
+.gallery{
+    -ms-flex: 20%
+    flex: 20%;
+    max-width: 20%;
+    position: relative;
+    margin: 5px;
+    z-index: 2;
+    justify-content: center;
+}
+
+@media screen and (max-width: 800px) {
+    .gallery {
+        -ms-flex: 30%;
+        flex: 30%;
+        max-width: 30%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .gallery {
+        flex: 45%;
+        -ms-flex: 45%;
+        max-width: 45%;
+    }
+}
+
+.gallery-img {
+    vertical-align: baseline;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    height: 200px;
+    border-radius: 11px;
+    z-index: 1;
+
+}
+
+.gallery-img:hover{
+    border: 3px solid var(--heavylight);
 }
 
 .fa-solid{
-    z-index: 3;
     position: absolute;
+    display: inline-block;
+    cursor: pointer;
     padding: 5px;
-    color: #ECDBBA;
+    color: var(--light);
     opacity: 0.35;
-    margin-top: 10px;
-    margin-left: 5px;
+    margin-top: 25px;
+    margin-left: 15px;
+    z-index: 2;
 }
 
 .add-icon:hover {
-    color: #C06014;
+    color: var(--heavylight);;
     opacity: 0.95;
 }
 
 .delete-icon:hover {
-    color: #C06014;
+    color: var(--heavylight);;
     opacity: 0.95;
 }
+
+.btn {
+    border: none;
+}
+
+.desc {
+    size: 2pt;
+    text-align: fit left;
+    padding: 10px;
+    color: var(--heavydark);
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.page-control {
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    height: 20vh;
+    background-color: #CFB495;
+    color: var(--heavylight);
+    text-align: center;
+}
+
+
+
+.nav-btn {
+    position: relative;
+    padding: 40px;
+    top: 5.5vh;
+    color: var(--heavylight);;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 2.5vw;
+}
+
 
 .form-container {
     position: relative;
     margin: 50px;
-}
-
-.form-div {
-    justify-content: center;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .btn-primary{
@@ -163,7 +189,19 @@ div.gallery img{
 
 .flashes p {
     size: 12px;
-    color: #C06014;
+    color: var(--heavydark);
 }
 
+.form-container {
+    position: relative;
+    background-color: var(--lightdark);
+    margin:0;
+    width: 100%;
+}
 
+.form-div {
+    justify-content: center;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
