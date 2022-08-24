@@ -1,7 +1,7 @@
 import os
 
 from django.forms import models
-from flask import Flask, render_template, request, redirect, flash, abort, url_for, session
+from flask import Flask, render_template, request, redirect, flash, abort, url_for, session, current_app
 from dotenv import load_dotenv
 from wtforms import StringField, SubmitField, PasswordField, validators
 from flask_wtf import FlaskForm
@@ -15,7 +15,9 @@ from werkzeug.routing import Map, Rule, NotFound, RequestRedirect
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.validators import URL, InputRequired, Email
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import path
 from django.shortcuts import render
+from flask_pager import Pager
 
 
 
@@ -29,6 +31,8 @@ Bootstrap(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///JWSTimages.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["PAGE_SIZE"] = 24
+app.config["VISIBLE_PAGE_COUNT"] = 20
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
@@ -90,36 +94,40 @@ def load_user(user_id):
 
 # def index(request):
 #     img_list = Images.objects.all()
-#     print(img_list)
 #     paginator = Paginator(img_list, imgs_per_page)
-#
 #     page_number = request.GET.get('page')
 #     page_obj = paginator.get_page(page_number)
 #
-#     return render(request, 'index.html', {'page_obj': page_obj})
+#     return render(request=request, template_name='main/index.html', context={'images': page_obj})
 
 
-@app.route('/', methods=['GET', 'POST'], defaults={"page": 1})
-@app.route('/<int:page>', methods=['GET'])
-def home(page):
-    page = request.args.get("page")
+# @app.route('/', methods=['GET', 'POST'], defaults={"page": 1})
+# @app.route('/<int:page>', methods=['GET'])
+@app.route('/')
+def home():
+    og_page = request.args.get("page", 1)
+    page = int(og_page or 0)
     img_list = db.session.query(Images)
     paginator = Paginator(img_list, imgs_per_page)
+    print(f"paginator.page_range: {paginator.page_range}")
+    count = len(paginator.page_range)
+    pager = Pager(page, 177)
+    pages = pager.get_pages()
+    print(f"count: {count}")
+    print(f"pager: {pager}")
+    print(f"pages: {pages}")
 
-    try:
-        all_images = paginator.page(page)
-    except PageNotAnInteger:
-        all_images = paginator.page(1)
-    except EmptyPage:
-        all_images = paginator.page(paginator.num_pages)
-
-    # all_images = paginator.page(2)
-    # print(f"strt-index: {all_images.start_index()}\nend-index: {all_images.end_index()}")
-    # print(f"Total: {paginator.count}")
-    # print(f"Num pages: {paginator.num_pages}")
-    # print(f"Page range: {paginator.page_range}")
-    # print(f"Page 7: {paginator.page(7)}")
-    return render_template("index.html", images=all_images)
+    skip = (page - 1) * current_app.config["PAGE_SIZE"]
+    limit = current_app.config["PAGE_SIZE"]
+    all_images = img_list[skip:skip + limit]
+    # try:
+    #     all_images = paginator.page(page)
+    #     all_images = img_list[skip: skip + limit]
+    # except PageNotAnInteger:
+    #     all_images = paginator.page(1)
+    # except EmptyPage:
+    #     all_images = paginator.page(paginator.num_pages)
+    return render_template("index.html", pages=pages, images=all_images)
 
 
 @app.route('/gallery/forward/<int:img_id>')
